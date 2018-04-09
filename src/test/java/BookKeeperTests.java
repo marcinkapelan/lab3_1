@@ -65,4 +65,19 @@ public class BookKeeperTests {
 
         verify(taxPolicyMock, times(2)).calculateTax(Mockito.<ProductType>any(), Mockito.<Money>any());
     }
+
+    @Test
+    public void requestingInvoiceWithoutElementsShouldReturnInvoiceWithoutElements() {
+        when(taxPolicyMock.calculateTax(Mockito.<ProductType>any(), Mockito.<Money>any())).thenReturn(new Tax(new Money(75.0), "Mock"));
+        assertThat(bookKeeper.issuance(invoiceRequest, taxPolicyMock).getItems().size(), is(0));
+    }
+
+    @Test
+    public void requestingInvoiceWithoutElementsShouldNotCallCalculateTaxMethod() {
+        when(taxPolicyMock.calculateTax(Mockito.<ProductType>any(), Mockito.<Money>any())).thenReturn(new Tax(new Money(75.0), "Mock"));
+
+        bookKeeper.issuance(invoiceRequest, taxPolicyMock);
+
+        verify(taxPolicyMock, times(0)).calculateTax(Mockito.<ProductType>any(), Mockito.<Money>any());
+    }
 }
