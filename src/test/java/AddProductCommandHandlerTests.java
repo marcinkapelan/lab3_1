@@ -19,7 +19,6 @@ import pl.com.bottega.ecommerce.sales.domain.reservation.Reservation;
 import pl.com.bottega.ecommerce.sales.domain.reservation.ReservationRepository;
 import pl.com.bottega.ecommerce.sharedkernel.Money;
 import pl.com.bottega.ecommerce.system.application.SystemContext;
-import pl.com.bottega.ecommerce.system.application.SystemUser;
 
 import java.util.Date;
 
@@ -66,13 +65,15 @@ public class AddProductCommandHandlerTests {
         availableProduct = new Product(Id.generate(), new Money(50.0), "Test Product", ProductType.STANDARD);
         unavailableProduct = new Product(Id.generate(), new Money(50.0), "Test Product", ProductType.STANDARD);
         unavailableProduct.markAsRemoved();
+
+        when(reservationRepositoryMock.load(Mockito.<Id>any())).thenReturn(reservation);
+        when(suggestionServiceMock.suggestEquivalent(Mockito.<Product>any(), Mockito.<Client>any())).thenReturn(availableProduct);
+        when(clientRepository.load(Mockito.<Id>any())).thenReturn(new Client());
     }
 
     @Test
     public void handleShouldInvokeLoadMethodOfReservationRepository() {
-        when(reservationRepositoryMock.load(Mockito.<Id>any())).thenReturn(reservation);
         when(productRepositoryMock.load(Mockito.<Id>any())).thenReturn(availableProduct);
-        when(suggestionServiceMock.suggestEquivalent(Mockito.<Product>any(), Mockito.<Client>any())).thenReturn(availableProduct);
 
         addProductCommandHandler.handle(addProductCommand);
 
@@ -81,9 +82,7 @@ public class AddProductCommandHandlerTests {
 
     @Test
     public void handleShouldInvokeLoadMethodOfProductRepository() {
-        when(reservationRepositoryMock.load(Mockito.<Id>any())).thenReturn(reservation);
         when(productRepositoryMock.load(Mockito.<Id>any())).thenReturn(availableProduct);
-        when(suggestionServiceMock.suggestEquivalent(Mockito.<Product>any(), Mockito.<Client>any())).thenReturn(availableProduct);
 
         addProductCommandHandler.handle(addProductCommand);
 
@@ -92,9 +91,7 @@ public class AddProductCommandHandlerTests {
 
     @Test
     public void handleForAvailableProductShouldNotInvokeLoadMethodOfSuggestionService() {
-        when(reservationRepositoryMock.load(Mockito.<Id>any())).thenReturn(reservation);
         when(productRepositoryMock.load(Mockito.<Id>any())).thenReturn(availableProduct);
-        when(suggestionServiceMock.suggestEquivalent(Mockito.<Product>any(), Mockito.<Client>any())).thenReturn(availableProduct);
 
         addProductCommandHandler.handle(addProductCommand);
 
@@ -103,10 +100,7 @@ public class AddProductCommandHandlerTests {
 
     @Test
     public void handleForNonAvailableProductShouldInvokeLoadMethodOfSuggestionService() {
-        when(reservationRepositoryMock.load(Mockito.<Id>any())).thenReturn(reservation);
         when(productRepositoryMock.load(Mockito.<Id>any())).thenReturn(unavailableProduct);
-        when(suggestionServiceMock.suggestEquivalent(Mockito.<Product>any(), Mockito.<Client>any())).thenReturn(availableProduct);
-        when(clientRepository.load(Mockito.<Id>any())).thenReturn(new Client());
 
         addProductCommandHandler.handle(addProductCommand);
 
@@ -115,9 +109,7 @@ public class AddProductCommandHandlerTests {
 
     @Test
     public void reservationShouldContainProductFromCommandAfterInvokingHandle() {
-        when(reservationRepositoryMock.load(Mockito.<Id>any())).thenReturn(reservation);
         when(productRepositoryMock.load(Mockito.<Id>any())).thenReturn(availableProduct);
-        when(suggestionServiceMock.suggestEquivalent(Mockito.<Product>any(), Mockito.<Client>any())).thenReturn(availableProduct);
 
         addProductCommandHandler.handle(addProductCommand);
 
@@ -127,7 +119,6 @@ public class AddProductCommandHandlerTests {
 
     @Test
     public void handleShouldInvokeSaveMethodOfReservationRepository() {
-        when(reservationRepositoryMock.load(Mockito.<Id>any())).thenReturn(reservation);
         when(productRepositoryMock.load(Mockito.<Id>any())).thenReturn(availableProduct);
 
         addProductCommandHandler.handle(addProductCommand);
