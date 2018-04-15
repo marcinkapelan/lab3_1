@@ -8,6 +8,7 @@ import pl.com.bottega.ecommerce.canonicalmodel.publishedlanguage.ClientData;
 import pl.com.bottega.ecommerce.canonicalmodel.publishedlanguage.Id;
 import pl.com.bottega.ecommerce.sales.domain.invoicing.*;
 import pl.com.bottega.ecommerce.sales.domain.productscatalog.ProductData;
+import pl.com.bottega.ecommerce.sales.domain.productscatalog.ProductDataBuilder;
 import pl.com.bottega.ecommerce.sales.domain.productscatalog.ProductType;
 import pl.com.bottega.ecommerce.sharedkernel.Money;
 
@@ -39,8 +40,19 @@ public class BookKeeperTests {
 
     @Test
     public void requestingInvoiceWithOneElementShouldReturnInvoiceWithOneElement() {
-        ProductData productData = new ProductData(Id.generate(), new Money(50.0), "Test Product", ProductType.STANDARD, new Date());
-        RequestItem requestItem = new RequestItem(productData, 1, productData.getPrice());
+        ProductData productData = new ProductDataBuilder()
+                .productId(Id.generate())
+                .price(new Money(50.0))
+                .name("Test Product")
+                .type(ProductType.STANDARD)
+                .snapshotDate(new Date())
+                .build();
+
+        RequestItem requestItem = new RequestItemBuilder()
+                .productData(productData)
+                .quantity(1)
+                .totalCost(productData.getPrice())
+                .build();
 
         invoiceRequest.add(requestItem);
 
@@ -50,11 +62,33 @@ public class BookKeeperTests {
 
     @Test
     public void requestingInvoiceWithTwoElementsShouldCallCalculateTaxMethodTwice() {
-        ProductData productData1 = new ProductData(Id.generate(), new Money(50.0), "Test Product1", ProductType.STANDARD, new Date());
-        RequestItem requestItem1 = new RequestItem(productData1, 1, productData1.getPrice());
+        ProductData productData1 = new ProductDataBuilder()
+                .productId(Id.generate())
+                .price(new Money(50.0))
+                .name("Test Product1")
+                .type(ProductType.STANDARD)
+                .snapshotDate(new Date())
+                .build();
 
-        ProductData productData2 = new ProductData(Id.generate(), new Money(35.0), "Test Product2", ProductType.STANDARD, new Date());
-        RequestItem requestItem2 = new RequestItem(productData2, 1, productData2.getPrice());
+        RequestItem requestItem1 = new RequestItemBuilder()
+                .productData(productData1)
+                .quantity(1)
+                .totalCost(productData1.getPrice())
+                .build();
+
+        ProductData productData2 = new ProductDataBuilder()
+                .productId(Id.generate())
+                .price(new Money(35.0))
+                .name("Test Product2")
+                .type(ProductType.STANDARD)
+                .snapshotDate(new Date())
+                .build();
+
+        RequestItem requestItem2 = new RequestItemBuilder()
+                .productData(productData2)
+                .quantity(1)
+                .totalCost(productData2.getPrice())
+                .build();
 
         invoiceRequest.add(requestItem1);
         invoiceRequest.add(requestItem2);

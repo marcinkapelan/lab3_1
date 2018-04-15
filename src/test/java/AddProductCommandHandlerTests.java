@@ -13,9 +13,11 @@ import pl.com.bottega.ecommerce.sales.domain.client.Client;
 import pl.com.bottega.ecommerce.sales.domain.client.ClientRepository;
 import pl.com.bottega.ecommerce.sales.domain.equivalent.SuggestionService;
 import pl.com.bottega.ecommerce.sales.domain.productscatalog.Product;
+import pl.com.bottega.ecommerce.sales.domain.productscatalog.ProductBuilder;
 import pl.com.bottega.ecommerce.sales.domain.productscatalog.ProductRepository;
 import pl.com.bottega.ecommerce.sales.domain.productscatalog.ProductType;
 import pl.com.bottega.ecommerce.sales.domain.reservation.Reservation;
+import pl.com.bottega.ecommerce.sales.domain.reservation.ReservationBuilder;
 import pl.com.bottega.ecommerce.sales.domain.reservation.ReservationRepository;
 import pl.com.bottega.ecommerce.sharedkernel.Money;
 import pl.com.bottega.ecommerce.system.application.SystemContext;
@@ -61,9 +63,24 @@ public class AddProductCommandHandlerTests {
 
         addProductCommand = new AddProductCommand(Id.generate(), Id.generate(), 1);
         clientData = new ClientData(Id.generate(), "Test Client");
-        reservation = new Reservation(Id.generate(), Reservation.ReservationStatus.OPENED, clientData, new Date());
-        availableProduct = new Product(Id.generate(), new Money(50.0), "Test Product", ProductType.STANDARD);
-        unavailableProduct = new Product(Id.generate(), new Money(50.0), "Test Product", ProductType.STANDARD);
+        reservation = new ReservationBuilder()
+                .aggregateId(Id.generate())
+                .status(Reservation.ReservationStatus.OPENED)
+                .clientData(clientData)
+                .createDate(new Date())
+                .build();
+        availableProduct = new ProductBuilder()
+                .aggregateId(Id.generate())
+                .price(new Money(50.0))
+                .name("Test Product")
+                .productType(ProductType.STANDARD)
+                .build();
+        unavailableProduct = new ProductBuilder()
+                .aggregateId(Id.generate())
+                .price(new Money(50.0))
+                .name("Test Product")
+                .productType(ProductType.STANDARD)
+                .build();
         unavailableProduct.markAsRemoved();
 
         when(reservationRepositoryMock.load(Mockito.<Id>any())).thenReturn(reservation);
