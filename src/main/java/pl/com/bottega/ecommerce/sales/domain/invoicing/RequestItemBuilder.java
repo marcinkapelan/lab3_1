@@ -6,29 +6,23 @@ import pl.com.bottega.ecommerce.sharedkernel.Money;
 public class RequestItemBuilder {
 
     private ProductData productData;
-    private int quantity;
-    private Money totalCost;
+    private int quantity = 1;
+    private Money totalCost = new Money(50.0);
 
     public RequestItemBuilder() {
     }
 
-    public RequestItemBuilder(ProductData productData, int quantity, Money totalCost) {
-        this.productData = productData;
-        this.quantity = quantity;
-        this.totalCost = totalCost;
-    }
-
-    public RequestItemBuilder productData(ProductData productData) {
+    public RequestItemBuilder withProductData(ProductData productData) {
         this.productData = productData;
         return this;
     }
 
-    public RequestItemBuilder quantity(int quantity) {
+    public RequestItemBuilder withQuantity(int quantity) {
         this.quantity = quantity;
         return this;
     }
 
-    public RequestItemBuilder totalCost(Money totalCost) {
+    public RequestItemBuilder withTotalCost(Money totalCost) {
         this.totalCost = totalCost;
         return this;
     }

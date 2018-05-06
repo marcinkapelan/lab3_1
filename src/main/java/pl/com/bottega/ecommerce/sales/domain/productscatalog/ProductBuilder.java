@@ -4,10 +4,10 @@ import pl.com.bottega.ecommerce.canonicalmodel.publishedlanguage.Id;
 import pl.com.bottega.ecommerce.sharedkernel.Money;
 
 public class ProductBuilder {
-    private Id id;
-    private Money price;
-    private String name;
-    private ProductType productType;
+    private Id id = Id.generate();
+    private Money price = new Money(50.0);
+    private String name = "Default Product";
+    private ProductType productType = ProductType.STANDARD;
 
     public ProductBuilder() {
     }
@@ -19,22 +19,22 @@ public class ProductBuilder {
         this.productType = productType;
     }
 
-    public ProductBuilder aggregateId(Id aggregateId){
+    public ProductBuilder withAggregateId(Id aggregateId){
         this.id = aggregateId;
         return this;
     }
 
-    public ProductBuilder price(Money price){
+    public ProductBuilder withPrice(Money price){
         this.price = price;
         return this;
     }
 
-    public ProductBuilder name(String name){
+    public ProductBuilder withName(String name){
         this.name = name;
         return this;
     }
 
-    public ProductBuilder productType(ProductType productType){
+    public ProductBuilder withProductType(ProductType productType){
         this.productType = productType;
         return this;
     }

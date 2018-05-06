@@ -22,8 +22,6 @@ import pl.com.bottega.ecommerce.sales.domain.reservation.ReservationRepository;
 import pl.com.bottega.ecommerce.sharedkernel.Money;
 import pl.com.bottega.ecommerce.system.application.SystemContext;
 
-import java.util.Date;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.times;
@@ -64,22 +62,11 @@ public class AddProductCommandHandlerTests {
         addProductCommand = new AddProductCommand(Id.generate(), Id.generate(), 1);
         clientData = new ClientData(Id.generate(), "Test Client");
         reservation = new ReservationBuilder()
-                .aggregateId(Id.generate())
-                .status(Reservation.ReservationStatus.OPENED)
-                .clientData(clientData)
-                .createDate(new Date())
+                .withClientData(clientData)
                 .build();
         availableProduct = new ProductBuilder()
-                .aggregateId(Id.generate())
-                .price(new Money(50.0))
-                .name("Test Product")
-                .productType(ProductType.STANDARD)
                 .build();
         unavailableProduct = new ProductBuilder()
-                .aggregateId(Id.generate())
-                .price(new Money(50.0))
-                .name("Test Product")
-                .productType(ProductType.STANDARD)
                 .build();
         unavailableProduct.markAsRemoved();
 

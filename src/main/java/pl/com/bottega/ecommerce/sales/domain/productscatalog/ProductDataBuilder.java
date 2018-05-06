@@ -6,44 +6,36 @@ import pl.com.bottega.ecommerce.sharedkernel.Money;
 import java.util.Date;
 
 public class ProductDataBuilder {
-    private Id productId;
-    private Money price;
-    private String name;
-    private Date snapshotDate;
-    private ProductType type;
+    private Id productId = Id.generate();
+    private Money price = new Money(50.0);
+    private String name = "Default product";
+    private Date snapshotDate = new Date();
+    private ProductType type = ProductType.STANDARD;
 
     public ProductDataBuilder() {
     }
 
-    public ProductDataBuilder(Id productId, Money price, String name, ProductType type, Date snapshotDate) {
-        this.productId = productId;
-        this.price = price;
-        this.name = name;
-        this.snapshotDate = snapshotDate;
-        this.type = type;
-    }
-
-    public ProductDataBuilder productId(Id productId) {
+    public ProductDataBuilder withProductId(Id productId) {
         this.productId = productId;
         return this;
     }
 
-    public ProductDataBuilder price(Money price) {
+    public ProductDataBuilder withPrice(Money price) {
         this.price = price;
         return this;
     }
 
-    public ProductDataBuilder name(String name) {
+    public ProductDataBuilder withName(String name) {
         this.name = name;
         return this;
     }
 
-    public ProductDataBuilder type(ProductType type) {
+    public ProductDataBuilder withType(ProductType type) {
         this.type = type;
         return this;
     }
 
-    public ProductDataBuilder snapshotDate(Date snapshotDate) {
+    public ProductDataBuilder withSnapshotDate(Date snapshotDate) {
         this.snapshotDate = snapshotDate;
         return this;
     }

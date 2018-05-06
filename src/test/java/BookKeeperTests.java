@@ -29,6 +29,10 @@ public class BookKeeperTests {
     BookKeeper bookKeeper;
     ClientData clientData;
     InvoiceRequest invoiceRequest;
+    ProductData productData1;
+    RequestItem requestItem1;
+    ProductData productData2;
+    RequestItem requestItem2;
 
     @Before
     public void setUp() {
@@ -36,25 +40,24 @@ public class BookKeeperTests {
 
         clientData = new ClientData(Id.generate(), "Test Client");
         invoiceRequest = new InvoiceRequest(clientData);
+
+        productData1 = new ProductDataBuilder()
+                .withName("Test Product 1")
+                .build();
+        requestItem1 = new RequestItemBuilder()
+                .withProductData(productData1)
+                .build();
+        productData2 = new ProductDataBuilder()
+                .withName("Test Product 2")
+                .build();
+        requestItem2 = new RequestItemBuilder()
+                .withProductData(productData2)
+                .build();
     }
 
     @Test
     public void requestingInvoiceWithOneElementShouldReturnInvoiceWithOneElement() {
-        ProductData productData = new ProductDataBuilder()
-                .productId(Id.generate())
-                .price(new Money(50.0))
-                .name("Test Product")
-                .type(ProductType.STANDARD)
-                .snapshotDate(new Date())
-                .build();
-
-        RequestItem requestItem = new RequestItemBuilder()
-                .productData(productData)
-                .quantity(1)
-                .totalCost(productData.getPrice())
-                .build();
-
-        invoiceRequest.add(requestItem);
+        invoiceRequest.add(requestItem1);
 
         when(taxPolicyMock.calculateTax(Mockito.<ProductType>any(), Mockito.<Money>any())).thenReturn(new Tax(new Money(75.0), "Mock"));
         assertThat(bookKeeper.issuance(invoiceRequest, taxPolicyMock).getItems().size(), is(1));
@@ -62,34 +65,6 @@ public class BookKeeperTests {
 
     @Test
     public void requestingInvoiceWithTwoElementsShouldCallCalculateTaxMethodTwice() {
-        ProductData productData1 = new ProductDataBuilder()
-                .productId(Id.generate())
-                .price(new Money(50.0))
-                .name("Test Product1")
-                .type(ProductType.STANDARD)
-                .snapshotDate(new Date())
-                .build();
-
-        RequestItem requestItem1 = new RequestItemBuilder()
-                .productData(productData1)
-                .quantity(1)
-                .totalCost(productData1.getPrice())
-                .build();
-
-        ProductData productData2 = new ProductDataBuilder()
-                .productId(Id.generate())
-                .price(new Money(35.0))
-                .name("Test Product2")
-                .type(ProductType.STANDARD)
-                .snapshotDate(new Date())
-                .build();
-
-        RequestItem requestItem2 = new RequestItemBuilder()
-                .productData(productData2)
-                .quantity(1)
-                .totalCost(productData2.getPrice())
-                .build();
-
         invoiceRequest.add(requestItem1);
         invoiceRequest.add(requestItem2);
 

@@ -8,40 +8,31 @@ import java.util.Date;
 
 public class ReservationBuilder {
 
-    private Id id;
-    private Reservation.ReservationStatus status;
+    private Id id = Id.generate();
+    private Reservation.ReservationStatus status = Reservation.ReservationStatus.OPENED;
     private ClientData clientData;
-    private Date createDate;
+    private Date createDate = new Date();
     private ArrayList<ReservationItem> items;
 
     public ReservationBuilder() {
     }
 
-    public ReservationBuilder(Id aggregateId, Reservation.ReservationStatus status,
-                              ClientData clientData, Date createDate) {
-        this.id = aggregateId;
-        this.status = status;
-        this.clientData = clientData;
-        this.createDate = createDate;
-        this.items = new ArrayList<ReservationItem>();
-    }
-
-    public ReservationBuilder aggregateId(Id aggregateId) {
+    public ReservationBuilder withAggregateId(Id aggregateId) {
         this.id = aggregateId;
         return this;
     }
 
-    public ReservationBuilder status(Reservation.ReservationStatus status) {
+    public ReservationBuilder withStatus(Reservation.ReservationStatus status) {
         this.status = status;
         return this;
     }
 
-    public ReservationBuilder clientData(ClientData clientData) {
+    public ReservationBuilder withClientData(ClientData clientData) {
         this.clientData = clientData;
         return this;
     }
 
-    public ReservationBuilder createDate(Date createDate) {
+    public ReservationBuilder withCreateDate(Date createDate) {
         this.createDate = createDate;
         return this;
     }
